@@ -1,0 +1,20 @@
+{
+  "name": "codex",
+  "version": "1.0.0",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "codex-js"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server"
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "mongodb": "^3.5.9"
+  }
+}
