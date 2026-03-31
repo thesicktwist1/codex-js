@@ -1,19 +1,18 @@
 import {MongoClient} from 'mongodb';
 
-const connectionString = process.env.ATLAS_URI || '';
+const uri = process.env.ATLAS_URI || '';
 
-const client = new MongoClient(connectionString);
+const client = new MongoClient(uri);
 
-let conn;
-let db;
+
+const database = client.db('codex-js');
+
+
 try {
-  conn = await client.connect();
-  db = conn.db('codex-js');
-  await db.createCollection('users');
+  await database.createCollection('users');
+  await database.createCollection('refresh-token');
 } catch (err) {
   throw err
 }
 
-
-
-export default db;
+export default database;
