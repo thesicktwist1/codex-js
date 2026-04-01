@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import database from '../db/conn';
+import appError from '../utils/error.js';
 
 const jwtSecret = process.env.JWT_SECRET;
 
@@ -10,17 +10,13 @@ const authHandler = (req, res, next) => {
   if (!header || !token) {
     const msg = header ? 'Malformed authorization header' :
                          'No authorization token included';
-    const error = new Error(msg);
-    error.status = 401;
-    throw error;
+    throw appError(msg, 401);
   };
-  jwt.verify(token, jwtSecret, (err, user) => {
+  jwt.verify(token, jwtSecret, (err, decoded) => {
     if (err) {
-      const error = new Error('Invalid or expired token');
-      error.status = 401;
-      throw error;
+      throw appError('Invalid or expired token', 401)
     }
-    req.user = user;
+    req.user = {id: decoded.userId};
     next();
   });
 };

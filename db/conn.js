@@ -10,7 +10,7 @@ const database = client.db('codex-js');
 
 try {
   await database.createCollection('users');
-  await database.createCollection('refresh-token');
+  await database.createCollection('refreshToken');
 } catch (err) {
   throw err
 }
