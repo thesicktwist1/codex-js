@@ -1,5 +1,4 @@
 
-import cookieParser from 'cookie-parser';
 import express from 'express';
 
 import * as authController from '../controllers/authController.js';
@@ -15,11 +14,5 @@ router.post('/register', authController.register);
 router.post('/refresh', authController.refresh);
 
 router.post('/revoke', authHandler, authController.revoke);
-
-router.get('/user', authHandler, authController.getUser);
-
-router.delete('/user', authHandler, authController.deleteUser);
-
-router.put('/user', authHandler, authController.updateUser);
 
 export default router;

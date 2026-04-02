@@ -1,3 +1,4 @@
+import {StatusCodes} from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import appError from '../utils/error.js';
@@ -10,11 +11,11 @@ const authHandler = (req, res, next) => {
   if (!header || !token) {
     const msg = header ? 'Malformed authorization header' :
                          'No authorization token included';
-    throw appError(msg, 401);
+    throw appError(msg, StatusCodes.UNAUTHORIZED);
   };
   jwt.verify(token, jwtSecret, (err, decoded) => {
     if (err) {
-      throw appError('Invalid or expired token', 401)
+      throw appError('Invalid or expired token', StatusCodes.UNAUTHORIZED);
     }
     req.user = {id: decoded.userId};
     next();
