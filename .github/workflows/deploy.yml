@@ -4,96 +4,20 @@ on:
   push:
     branches: [ main ]
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  ci:
-    name: Quality Checks
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Setup Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Verify ESLint v10+ configuration
-      run: |
-        echo "Checking ESLint configuration..."
-        npm list eslint @eslint/js
-        if [ ! -f eslint.config.js ]; then
-          echo "Error: eslint.config.js not found. ESLint v10+ requires flat config."
-          exit 1
-        fi
-        echo "ESLint v10+ configuration verified."
-
-    - name: Lint code (ESLint v10+)
-      run: npm run lint
-
-    - name: Run tests
-      run: npm test -- --reporter=verbose
-
-  build:
-    name: Build Artifacts
-    needs: ci
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup Node.js 20.x
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20.x
-        cache: 'npm'
-        cache-dependency-path: '**/package-lock.json'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build
-      run: npm run build 2>/dev/null || echo "No build script configured, skipping build step"
-
-    - name: Upload build artifacts
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: build-artifacts
-        path: |
-          dist/
-          build/
-        retention-days: 30
-        if-no-files-found: warn
-
   deploy:
-    name: Deploy to Production
-    needs: build
     runs-on: ubuntu-latest
-    environment: production
     steps:
     - uses: actions/checkout@v4
-
-    - name: Download build artifacts
-      uses: actions/download-artifact@v4
+    - name: Use Node.js 20.x
+      uses: actions/setup-node@v4
       with:
-        name: build-artifacts
-        path: ./artifacts
-
-    - name: Deploy to production
-      run: |
-        echo "Deploying to production environment..."
-        echo "Build artifacts available at ./artifacts/"
-        # Configure your deployment command here
-        # Example: npm run deploy
-        # Example: docker build and push
-        # Example: CloudFormation/Terraform deployment
-        echo "Deployment step - configure deployment command as needed for your infrastructure"
+        node-version: 20.x
+        cache: 'npm'
+    - run: npm ci
+    - run: npm run lint
+    - run: npm test
+    - name: Build
+      run: npm run build || echo "No build script, skipping"
+    - name: Deploy
+      run: echo "Deployment step - configure as needed"

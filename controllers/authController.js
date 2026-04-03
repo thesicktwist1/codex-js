@@ -20,7 +20,7 @@ const refreshTknsCollection = database.collection('refreshToken');
 const saltRounds = 10;
 
 
-export const revoke = asyncHandler(async (req, res, _next) => {
+export const revoke = asyncHandler(async (req, res) => {
   const token = req.cookies?.refreshToken;
   if (token) {
     await deleteRefreshToken(token);
@@ -29,7 +29,7 @@ export const revoke = asyncHandler(async (req, res, _next) => {
 });
 
 
-export const refresh = asyncHandler(async (req, res, _next) => {
+export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
   if (!refreshToken) {
     throw appError('No refresh-token included', StatusCodes.UNAUTHORIZED);
@@ -54,7 +54,7 @@ export const refresh = asyncHandler(async (req, res, _next) => {
   res.status(StatusCodes.OK).json({accessToken: newAccessToken});
 });
 
-export const login = asyncHandler(async (req, res, _next) => {
+export const login = asyncHandler(async (req, res) => {
   const error = validateSchema('login', req.body);
   if (error) {
     throw error;
@@ -73,7 +73,7 @@ export const login = asyncHandler(async (req, res, _next) => {
 // POST /auth/register creates a new user account with email, username, and
 // password. It validates input credentials, checks for existing users, and
 // stores the hashed password.
-export const register = asyncHandler(async (req, res, _next) => {
+export const register = asyncHandler(async (req, res) => {
   const error = validateSchema('register', req.body);
   if (error) {
     throw error;

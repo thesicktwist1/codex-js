@@ -68,7 +68,7 @@ vi.mock('../utils/userAuth.js', () => ({
                                 }));
 
 import * as authController from '../controllers/authController.js';
-import database, {__collections} from '../db/conn.js';
+import {__collections} from '../db/conn.js';
 import {StatusCodes} from 'http-status-codes';
 
 const makeRes = () => {

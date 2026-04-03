@@ -23,7 +23,7 @@ vi.mock('../db/conn.js', () => {
 });
 
 import * as booksController from '../controllers/booksController.js';
-import database, {__collections} from '../db/conn.js';
+import {__collections} from '../db/conn.js';
 import {StatusCodes} from 'http-status-codes';
 
 const makeRes = () => {

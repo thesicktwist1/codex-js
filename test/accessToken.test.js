@@ -1,12 +1,11 @@
 import {describe, expect, it, vi} from 'vitest';
 
 vi.mock(
-    'jsonwebtoken',
-    () => ({
-      default: {
-        sign: vi.fn((payload, secret, options) => `signed-${payload.userId}`),
-      },
-    }));
+    'jsonwebtoken', () => ({
+                      default: {
+                        sign: vi.fn((payload) => `signed-${payload.userId}`),
+                      },
+                    }));
 
 import generateAccessToken from '../utils/accessToken.js';
 

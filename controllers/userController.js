@@ -1,6 +1,5 @@
 import bcrypt from 'bcrypt';
 import {StatusCodes} from 'http-status-codes';
-import joi from 'joi';
 import {ObjectId} from 'mongodb';
 
 import database from '../db/conn.js';
@@ -16,7 +15,7 @@ const saltRounds = 10;
 const usersCollection = database.collection('users');
 // GET /auth/user retrieves the authenticated user's profile information.
 // Requires : AccessToken
-export const getUser = asyncHandler(async (req, res, _next) => {
+export const getUser = asyncHandler(async (req, res) => {
   const id = new ObjectId(req.user.id);
   let user = await usersCollection.findOne({_id: id});
   if (!user) {
@@ -27,7 +26,7 @@ export const getUser = asyncHandler(async (req, res, _next) => {
 
 // DELETE /auth/user deletes the authicated user's profile.
 // Requires : AccessToken & Password
-export const deleteUser = asyncHandler(async (req, res, _next) => {
+export const deleteUser = asyncHandler(async (req, res) => {
   const {password} = req.body;
   const user = await userAuthentication({id: req.user.id}, password);
   await usersCollection.deleteOne({_id: user.id});
@@ -38,7 +37,7 @@ export const deleteUser = asyncHandler(async (req, res, _next) => {
 // PUT /auth/user updates the authenticated
 // user's profile information (users password for now)
 // Requires : AccessToken & Password
-export const updateUser = asyncHandler(async (req, res, _next) => {
+export const updateUser = asyncHandler(async (req, res) => {
   const {currentPassword, newPassword} = req.body;
   const error = validateSchema('updateUser', req.body);
   if (error) {

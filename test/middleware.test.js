@@ -8,7 +8,7 @@ import appError from '../utils/appError.js';
 
 vi.mock('jsonwebtoken', () => ({
                           default: {
-                            verify: vi.fn((token, secret) => ({userId: 'x'})),
+                            verify: vi.fn(() => ({userId: 'x'})),
                           },
                         }));
 

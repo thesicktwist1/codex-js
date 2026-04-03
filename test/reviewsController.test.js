@@ -31,7 +31,7 @@ vi.mock('../db/conn.js', () => {
 });
 
 import * as reviewsController from '../controllers/reviewsController.js';
-import database, {__collections} from '../db/conn.js';
+import {__collections} from '../db/conn.js';
 import {StatusCodes} from 'http-status-codes';
 
 const makeRes = () => {
