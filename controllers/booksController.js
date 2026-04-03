@@ -1,5 +1,4 @@
 import {StatusCodes} from 'http-status-codes';
-import joi from 'joi';
 import {ObjectId} from 'mongodb';
 
 import database from '../db/conn.js';

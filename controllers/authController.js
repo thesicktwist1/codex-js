@@ -81,7 +81,7 @@ export const register = asyncHandler(async (req, res, next) => {
   const {email, username, password} = req.body;
   const exists = await usersCollection.findOne({email: email});
   if (exists) {
-    throw appError('User already exists', StatusCodes.UNAUTHORIZED);
+    throw appError('User already exists', StatusCodes.CONFLICT);
   }
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   let result = await usersCollection.insertOne(databaseObject(

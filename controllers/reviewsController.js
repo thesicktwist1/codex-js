@@ -1,5 +1,4 @@
 import {StatusCodes} from 'http-status-codes';
-import joi from 'joi';
 import {ObjectId} from 'mongodb';
 
 import database from '../db/conn.js';
@@ -156,7 +155,10 @@ export const deleteReview = asyncHandler(async (req, res, next) => {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };
   const id = new ObjectId(req.params.id);
-  await reviewsCollection.deleteOne(
+  const result = await reviewsCollection.deleteOne(
       {_id: id, userId: new ObjectId(req.user.id)});
+  if (result.deletedCount === 0) {
+    throw appError('Not found', StatusCodes.NOT_FOUND);
+  }
   res.status(StatusCodes.NO_CONTENT).send();
 });

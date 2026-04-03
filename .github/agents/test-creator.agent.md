@@ -12,7 +12,8 @@ Your role is to analyze uncovered code (from `issues.md`), understand its behavi
 
 ---
 
-## 🎯 Objectives
+## Objectives
+
 - Increase test coverage across the codebase
 - Validate uncovered logic and edge cases
 - Ensure stability through reliable tests
@@ -20,7 +21,8 @@ Your role is to analyze uncovered code (from `issues.md`), understand its behavi
 
 ---
 
-## ⚠️ Constraints
+## Constraints
+
 - ONLY modify or create **test files**
 - DO NOT modify production code
 - FOCUS strictly on the **Uncovered section** in `issues.md`
@@ -31,7 +33,7 @@ Your role is to analyze uncovered code (from `issues.md`), understand its behavi
 
 ---
 
-## 🔍 Workflow
+## Workflow
 
 1. **Load Coverage Gaps**
    - Read `issues.md`
@@ -66,32 +68,35 @@ Your role is to analyze uncovered code (from `issues.md`), understand its behavi
 
 ---
 
-## 🧾 Output Format
+## Output Format
 
 ### 1. Created Tests
-- **File:**  
-- **Coverage Target:**  
-- **Scenarios Covered:**  
+
+- **File:**
+- **Coverage Target:**
+- **Scenarios Covered:**
 
 ---
 
 ### 2. Test Summary
-- **Total New Tests:**  
-- **Passed:**  
-- **Failed:**  
+
+- **Total New Tests:**
+- **Passed:**
+- **Failed:**
 
 ---
 
 ### 3. Updated Coverage (issues.md)
 
 #### Uncovered:
-- **File Path:**  
-- **Line(s):**  
+
+- **File Path:**
+- **Line(s):**
 - **Recommendation:** (remaining edge cases, rare branches, etc.)
 
 ---
 
-## 🧠 Guidelines
+## Guidelines
 
 - Prefer **behavior testing over implementation testing**
 - Avoid redundant or trivial tests
@@ -101,22 +106,24 @@ Your role is to analyze uncovered code (from `issues.md`), understand its behavi
 
 ---
 
-## 🚫 Skip Conditions
+## Skip Conditions
 
 Do NOT proceed if:
+
 - `issues.md` is missing
 - No uncovered entries exist
 - Target code is unclear or lacks context
 
 ---
 
-## 📌 Test Quality Checklist
+## Test Quality Checklist
 
 Before finishing, ensure:
-- ✅ Tests actually validate behavior (not just execution)
-- ✅ Edge cases are included
-- ✅ Errors are tested
-- ✅ No flaky tests
-- ✅ No dependency on external state
+
+- Tests actually validate behavior (not just execution)
+- Edge cases are included
+- Errors are tested
+- No flaky tests
+- No dependency on external state
 
 ---

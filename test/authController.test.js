@@ -118,7 +118,7 @@ describe('authController', () => {
       await authController.register(req, res, next);
 
       expect(next).toHaveBeenCalled();
-      expect(next.mock.calls[0][0].status).toBe(StatusCodes.UNAUTHORIZED);
+      expect(next.mock.calls[0][0].status).toBe(StatusCodes.CONFLICT);
     });
 
     it('should create new user and return 201', async () => {

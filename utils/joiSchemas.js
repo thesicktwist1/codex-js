@@ -1,7 +1,7 @@
 import {StatusCodes} from 'http-status-codes';
 import joi from 'joi';
 
-import appError from './appError';
+import appError from './appError.js';
 
 const minLength = 8;
 const maxLength = 32;
@@ -34,7 +34,7 @@ const joiSchemas = {
     rating: joi.number().integer().min(1).max(maxRating).required()
   }),
   updateReview: joi.object({
-    description: joi.string().max(500).required(),
+    description: joi.string().max(descLength).required(),
     rating: joi.number().integer().min(1).max(maxRating).required()
   })
 };

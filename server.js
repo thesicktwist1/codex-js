@@ -8,6 +8,16 @@ import books from './routes/books.js';
 import reviews from './routes/reviews.js';
 import user from './routes/user.js';
 
+// Validate required environment variables
+const requiredEnvVars = ['ATLAS_URI', 'JWT_SECRET', 'REFRESH_SECRET'];
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  console.error(
+      `Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  process.exit(1);
+}
+
 const port = process.env.PORT || 5050;
 
 const parserLimit = '1mb';

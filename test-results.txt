@@ -1,0 +1,13 @@
+
+> codex@1.0.0 test
+> vitest
+
+
+ RUN  v4.1.2 /home/thesicktwist1/workspace/github.com/thesicktwist1/codex-js
+
+
+ Test Files  8 passed (8)
+      Tests  59 passed (59)
+   Start at  16:55:08
+   Duration  578ms (transform 710ms, setup 201ms, import 1.53s, tests 101ms, environment 1ms)
+

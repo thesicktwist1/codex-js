@@ -245,6 +245,10 @@ describe('reviewsController', () => {
   });
 
   it('deleteReview deletes review successfully', async () => {
+    __collections.reviewsCollection.deleteOne.mockResolvedValueOnce({
+      deletedCount: 1,
+    });
+
     const req = {
       params: {id: '60c72b2f4f1a4e24d8b67890'},
       user: {id: '61c72b2f4f1a4e24d8b67890'},
@@ -258,6 +262,25 @@ describe('reviewsController', () => {
     expect(res.status).toHaveBeenCalledWith(StatusCodes.NO_CONTENT);
     expect(res.send).toHaveBeenCalled();
     expect(next).not.toHaveBeenCalled();
+  });
+
+  it('deleteReview returns 404 when review not found', async () => {
+    __collections.reviewsCollection.deleteOne.mockResolvedValueOnce({
+      deletedCount: 0,
+    });
+
+    const req = {
+      params: {id: '60c72b2f4f1a4e24d8b67890'},
+      user: {id: '61c72b2f4f1a4e24d8b67890'},
+    };
+    const res = makeRes();
+    const next = vi.fn();
+
+    await reviewsController.deleteReview(req, res, next);
+
+    expect(__collections.reviewsCollection.deleteOne).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+    expect(next.mock.calls[0][0].status).toBe(StatusCodes.NOT_FOUND);
   });
 
   it('updateReview returns 400 on invalid payload', async () => {

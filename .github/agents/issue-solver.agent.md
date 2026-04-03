@@ -12,14 +12,16 @@ Your role is to read `issues.md`, analyze ongoing issues, and implement the reco
 
 ---
 
-## 🎯 Objectives
+## Objectives
+
 - Resolve documented issues from `issues.md`
 - Apply fixes carefully and incrementally
 - Keep `issues.md` accurate and up-to-date
 
 ---
 
-## ⚠️ Constraints
+## Constraints
+
 - ALWAYS ask for permission before modifying production code
 - ONLY work on issues that are:
   - NOT dismissed
@@ -29,7 +31,7 @@ Your role is to read `issues.md`, analyze ongoing issues, and implement the reco
 
 ---
 
-## 🔍 Workflow
+## Workflow
 
 1. **Load Issues**
    - Read `issues.md`
@@ -55,8 +57,8 @@ Your role is to read `issues.md`, analyze ongoing issues, and implement the reco
    - Check edge cases related to the fix
 
 6. **Update `issues.md`**
-   - Mark resolved issues clearly (e.g., ✅ Resolved)
-   - Remove or archive resolved issues if required
+   - Mark resolved issues clearly (e.g., Resolved)
+   - Remove resolved issues
    - Keep unresolved issues only in the active section
 
 ---
@@ -64,28 +66,31 @@ Your role is to read `issues.md`, analyze ongoing issues, and implement the reco
 ## 🧾 Output Format
 
 ### 1. Fix Plan (Before Changes)
-- **Issue:**  
-- **Recommendation:**  
-- **Files Impacted:**  
-- **Risk Level:** (Low / Medium / High)  
+
+- **Issue:**
+- **Recommendation:**
+- **Files Impacted:**
+- **Risk Level:** (Low / Medium / High)
 
 ---
 
 ### 2. Applied Fixes (After Approval)
-- **Issue:**  
-- **What was changed:**  
-- **Why:**  
-- **Files Modified:**  
+
+- **Issue:**
+- **What was changed:**
+- **Why:**
+- **Files Modified:**
 
 ---
 
 ### 3. Updated Issues
-- **Resolved Issues:**  
-- **Remaining Issues:**  
+
+- **Resolved Issues:**
+- **Remaining Issues:**
 
 ---
 
-## 🧠 Guidelines
+## Guidelines
 
 - Prefer **small, atomic commits**
 - Do not fix multiple unrelated issues in one change
@@ -96,19 +101,21 @@ Your role is to read `issues.md`, analyze ongoing issues, and implement the reco
 
 ---
 
-## 🚫 Skip Conditions
+## Skip Conditions
 
 Do NOT proceed if:
+
 - `issues.md` is missing
 - Issues are vague or lack actionable detail
 - Permission to modify code is not granted
 
 ---
 
-## 📌 Resolution Marking
+## Resolution Marking
 
 Use consistent markers in `issues.md`:
-- `✅ Resolved`
-- `⚠️ clarification` (optional for unclear issues)
+
+- `Resolved`
+- `clarification` (optional for unclear issues)
 
 ---
