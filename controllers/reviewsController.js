@@ -18,7 +18,7 @@ const isValidRating = (rating) => {
 
 // POST /api/review
 // Creates a review based on the given book id
-export const createReview = asyncHandler(async (req, res, next) => {
+export const createReview = asyncHandler(async (req, res, _next) => {
   const error = validateSchema('createReview', req.body);
   if (error) {
     throw error;
@@ -44,7 +44,7 @@ export const createReview = asyncHandler(async (req, res, next) => {
 });
 // GET /api/review/:id
 // Get a single review based on id
-export const getReview = asyncHandler(async (req, res, next) => {
+export const getReview = asyncHandler(async (req, res, _next) => {
   if (!ObjectId.isValid(req.params.id)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };
@@ -59,7 +59,7 @@ export const getReview = asyncHandler(async (req, res, next) => {
 // GET /api/books/:bookId/reviews
 // Get multiple reviews based on the given book id
 // Queries: [limit, page]
-export const getReviewsFromBookId = asyncHandler(async (req, res, next) => {
+export const getReviewsFromBookId = asyncHandler(async (req, res, _next) => {
   if (!ObjectId.isValid(req.params.bookId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };
@@ -83,7 +83,7 @@ export const getReviewsFromBookId = asyncHandler(async (req, res, next) => {
 // GET /api/user/:userId/reviews
 // Get multiple reviews based on the given book id
 // Queries: [limit, page]
-export const getReviewsFromUserId = asyncHandler(async (req, res, next) => {
+export const getReviewsFromUserId = asyncHandler(async (req, res, _next) => {
   if (!ObjectId.isValid(req.params.userId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };
@@ -106,7 +106,7 @@ export const getReviewsFromUserId = asyncHandler(async (req, res, next) => {
 // GET /api/reviews/
 // Get multiple reviews
 // Queries: [limit, page]
-export const getReviews = asyncHandler(async (req, res, next) => {
+export const getReviews = asyncHandler(async (req, res, _next) => {
   let limit = parseInt(req.query.limit);
   if (isNaN(limit) || limit < 0 || limit > pageLimit) {
     limit = pageLimit;
@@ -124,7 +124,7 @@ export const getReviews = asyncHandler(async (req, res, next) => {
 // PUT /api/reviews/:id
 // Update a review based on given id
 // Require: Access Token
-export const updateReview = asyncHandler(async (req, res, next) => {
+export const updateReview = asyncHandler(async (req, res, _next) => {
   const error = validateSchema('updateReview', req.body);
   if (error) {
     throw error;
@@ -150,7 +150,7 @@ export const updateReview = asyncHandler(async (req, res, next) => {
 // DELETE /api/reviews/:id
 // Delete a review based on given id
 // Require: Access Token
-export const deleteReview = asyncHandler(async (req, res, next) => {
+export const deleteReview = asyncHandler(async (req, res, _next) => {
   if (!ObjectId.isValid(req.params.id) || !ObjectId.isValid(req.user.id)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };

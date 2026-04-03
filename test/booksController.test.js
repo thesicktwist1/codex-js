@@ -8,15 +8,17 @@ vi.mock('../db/conn.js', () => {
             {skip: vi.fn(() => ({limit: vi.fn(() => ({toArray: vi.fn()}))}))})),
     insertOne: vi.fn(),
   };
+  const usersCollection = {findOne: vi.fn()};
   const database = {
     collection: vi.fn((name) => {
       if (name === 'books') return booksCollection;
+      if (name === 'users') return usersCollection;
       throw new Error(`Unexpected collection ${name}`);
     }),
   };
   return {
     default: database,
-    __collections: {booksCollection},
+    __collections: {booksCollection, usersCollection},
   };
 });
 

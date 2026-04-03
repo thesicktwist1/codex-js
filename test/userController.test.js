@@ -28,7 +28,7 @@ vi.mock('bcrypt', () => ({
                   }));
 
 import * as userController from '../controllers/userController.js';
-import database, {__collections} from '../db/conn.js';
+import {__collections} from '../db/conn.js';
 import {StatusCodes} from 'http-status-codes';
 
 const makeRes = () => {
@@ -144,8 +144,8 @@ describe('userController', () => {
 
     await userController.updateUser(req, res, next);
 
-    expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalled();
+    expect(next).toHaveBeenCalled();
+    expect(next.mock.calls[0][0].status).toBe(400);
   });
 
   it('updateUser returns 401 on incorrect current password', async () => {

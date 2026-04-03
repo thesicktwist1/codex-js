@@ -11,7 +11,7 @@ const booksCollection = database.collection('books');
 const pageLimit = 10;
 // GET /api/books/:id
 // Retrieves a single book by ID.
-export const getBook = asyncHandler(async (req, res, next) => {
+export const getBook = asyncHandler(async (req, res, _next) => {
   if (!ObjectId.isValid(req.params.bookId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
   };
@@ -25,7 +25,7 @@ export const getBook = asyncHandler(async (req, res, next) => {
 
 // GET /api/books/
 // Retrieves books based on the given page & limit
-export const getBooks = asyncHandler(async (req, res, next) => {
+export const getBooks = asyncHandler(async (req, res, _next) => {
   let limit = parseInt(req.query.limit);
   if (isNaN(limit) || limit < 0 || limit > pageLimit) {
     limit = pageLimit;
@@ -41,7 +41,7 @@ export const getBooks = asyncHandler(async (req, res, next) => {
 
 // POST /api/books/
 // Create a book
-export const createBook = asyncHandler(async (req, res, next) => {
+export const createBook = asyncHandler(async (req, res, _next) => {
   const error = validateSchema('createBook', req.body);
   if (error) {
     throw error;

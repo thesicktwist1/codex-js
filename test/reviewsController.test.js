@@ -15,16 +15,18 @@ vi.mock('../db/conn.js', () => {
     findOneAndUpdate: vi.fn(),
     deleteOne: vi.fn(),
   };
+  const usersCollection = {findOne: vi.fn()};
 
   return {
     default: {
       collection: vi.fn((name) => {
         if (name === 'books') return booksCollection;
         if (name === 'reviews') return reviewsCollection;
+        if (name === 'users') return usersCollection;
         throw new Error(`No collection for ${name}`);
       }),
     },
-    __collections: {booksCollection, reviewsCollection},
+    __collections: {booksCollection, reviewsCollection, usersCollection},
   };
 });
 

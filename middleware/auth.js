@@ -12,21 +12,16 @@ const authHandler = (req, res, next) => {
       throw appError(
           'No authorization token included', StatusCodes.UNAUTHORIZED);
     }
-
     const parts = header.split(' ');
     if (parts.length !== 2 || parts[0] !== 'Bearer' || !parts[1]) {
       throw appError(
           'Malformed authorization header', StatusCodes.UNAUTHORIZED);
     }
-
     const token = parts[1];
-    let decoded;
-    try {
-      decoded = jwt.verify(token, jwtSecret);
-    } catch (err) {
+    const decoded = jwt.verify(token, jwtSecret);
+    if (!decoded?.userId) {
       throw appError('Invalid or expired token', StatusCodes.UNAUTHORIZED);
     }
-
     req.user = {id: decoded.userId};
     next();
   } catch (err) {

@@ -1,12 +1,15 @@
 import {StatusCodes} from 'http-status-codes';
 import joi from 'joi';
 
+import {updateUser} from '../controllers/userController.js';
+
 import appError from './appError.js';
 
 const minLength = 8;
 const maxLength = 32;
 const descLength = 500;
 const maxRating = 10;
+const passwordPattern = new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)');
 
 const joiSchemas = {
   login: joi.object({
@@ -19,7 +22,7 @@ const joiSchemas = {
     password: joi.string()
                   .min(minLength)
                   .max(maxLength)
-                  .pattern(new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)'))
+                  .pattern(passwordPattern)
                   .required()
   }),
   createBook: joi.object({
@@ -36,6 +39,14 @@ const joiSchemas = {
   updateReview: joi.object({
     description: joi.string().max(descLength).required(),
     rating: joi.number().integer().min(1).max(maxRating).required()
+  }),
+  updateUser: joi.object({
+    currentPassword: joi.string().required(),
+    newPassword: joi.string()
+                     .min(minLength)
+                     .max(maxLength)
+                     .pattern(passwordPattern)
+                     .required()
   })
 };
 

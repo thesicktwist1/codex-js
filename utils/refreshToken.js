@@ -16,35 +16,27 @@ const saltRounds = 10;
 const refreshTknCollection = database.collection('refreshToken');
 
 export const generateRefreshToken = async (userId) => {
-  try {
-    const session = crypto.randomUUID();
-    const token = jwt.sign(
-        {userId: userId, session: session},
-        refreshSecret,
-        {expiresIn: expiration / 1000},
-    );
-    const hashedToken = await bcrypt.hash(token, saltRounds);
-    await refreshTknCollection.insertOne({
-      userId: userId,
-      session: session,
-      hashedToken: hashedToken,
-      expiresAt: new Date(new Date(Date.now() + expiration)),
-    });
-    return token;
-  } catch (err) {
-    throw err;
-  };
+  const session = crypto.randomUUID();
+  const token = jwt.sign(
+      {userId: userId, session: session},
+      refreshSecret,
+      {expiresIn: expiration / 1000},
+  );
+  const hashedToken = await bcrypt.hash(token, saltRounds);
+  await refreshTknCollection.insertOne({
+    userId: userId,
+    session: session,
+    hashedToken: hashedToken,
+    expiresAt: new Date(new Date(Date.now() + expiration)),
+  });
+  return token;
 };
 
 export const deleteRefreshToken = async (token) => {
-  try {
-    const decoded = jwt.verify(token, refreshSecret);
-    if (!decoded?.userId || !decoded.session) {
-      throw appError('Malformed token', StatusCodes.BAD_REQUEST);
-    };
-    await refreshTknCollection.deleteOne(
-        {userId: decoded.userId, session: decoded.session});
-  } catch (err) {
-    throw err;
-  }
+  const decoded = jwt.verify(token, refreshSecret);
+  if (!decoded?.userId || !decoded.session) {
+    throw appError('Malformed token', StatusCodes.BAD_REQUEST);
+  };
+  await refreshTknCollection.deleteOne(
+      {userId: decoded.userId, session: decoded.session});
 };
