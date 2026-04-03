@@ -6,19 +6,58 @@ on:
   pull_request:
     branches: [ main ]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    name: Test Node.js ${{ matrix.node-version }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [18.x, 20.x]
+      fail-fast: false
     steps:
     - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
-    - run: npm run lint
-    - run: npm test
+        cache-dependency-path: '**/package-lock.json'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Verify ESLint v10+ configuration
+      run: |
+        echo "Checking ESLint configuration..."
+        npm list eslint @eslint/js
+        if [ ! -f eslint.config.js ]; then
+          echo "Error: eslint.config.js not found. ESLint v10+ requires flat config."
+          exit 1
+        fi
+        echo "ESLint v10+ configuration verified."
+
+    - name: Lint code (ESLint v10+)
+      run: npm run lint
+      continue-on-error: false
+
+    - name: Run tests with coverage
+      run: npm test -- --reporter=verbose
+      continue-on-error: false
+
+    - name: Upload test results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-node-${{ matrix.node-version }}
+        path: |
+          coverage/
+          test-results/
+        retention-days: 30
+        if-no-files-found: warn

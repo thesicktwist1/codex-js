@@ -1,8 +1,6 @@
 import {StatusCodes} from 'http-status-codes';
 import joi from 'joi';
 
-import {updateUser} from '../controllers/userController.js';
-
 import appError from './appError.js';
 
 const minLength = 8;
