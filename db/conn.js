@@ -15,11 +15,13 @@ try {
 
   await database.collection('books').createIndex({title: 1}, {unique: true});
 
-  await database.collection('refreshToken').createIndex({userId: 1}, {
-    unique: true
-  });
+  await database.collection('refreshToken')
+      .createIndex({userId: 1, session: 1}, {unique: true});
 } catch (err) {
-  throw err
+  if (err.code !== 11000) {
+    console.error('Error creating indexes:', err);
+    throw err;
+  }
 };
 
 

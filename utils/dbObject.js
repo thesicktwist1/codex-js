@@ -1,3 +1,4 @@
+
 const databaseObject = (obj, created = false) => {
   const date = new Date();
   if (created) {

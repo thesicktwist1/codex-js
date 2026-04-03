@@ -1,35 +1,34 @@
 import bcrypt from 'bcrypt';
+import crypto from 'crypto'
+import {StatusCodes} from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 
 import database from '../db/conn.js';
 
-const expiration = 7;
+import appError from './appError.js';
+
+const expiration = process.env.REFRESH_EXPIRATION_DAYS ?
+    parseInt(process.env.REFRESH_EXPIRATION_DAYS) * 24 * 60 * 60 * 1000 :
+    7 * 24 * 60 * 60 * 1000;
 const refreshSecret = process.env.REFRESH_SECRET;
 const saltRounds = 10;
 
+const refreshTknCollection = database.collection('refreshToken');
+
 export const generateRefreshToken = async (userId) => {
   try {
-    let refreshTknCollection = database.collection('refreshToken');
-    let findResult =
-        await refreshTknCollection.find({userId: userId}).toArray();
-    const now = new Date();
-    const expiredTkns = [];
-    for await (const token of findResult) {
-      if (token.expiresAt < now) {
-        expiredTkns.push(token._id);
-      };
-    };
-    await refreshTknCollection.deleteMany(expiredTkns);
+    const session = crypto.randomUUID();
     const token = jwt.sign(
-        {userId: userId},
+        {userId: userId, session: session},
         refreshSecret,
-        {expiresIn: '7d'},
+        {expiresIn: expiration / 1000},
     );
     const hashedToken = await bcrypt.hash(token, saltRounds);
     await refreshTknCollection.insertOne({
       userId: userId,
+      session: session,
       hashedToken: hashedToken,
-      expiresAt: new Date(now.getDate() + expiration),
+      expiresAt: new Date(new Date(Date.now() + expiration)),
     });
     return token;
   } catch (err) {
@@ -37,18 +36,15 @@ export const generateRefreshToken = async (userId) => {
   };
 };
 
-export const deleteRefreshToken = async (userId, oldToken) => {
+export const deleteRefreshToken = async (token) => {
   try {
-    let refreshTknCollection = database.collection('refreshToken');
-    let tokens = refreshTknCollection.find({userId: userId});
-    for await (const token of tokens) {
-      const isMatch = await bcrypt.compare(oldToken, token.hashedToken);
-      if (isMatch) {
-        await refreshTknCollection.deleteOne({_id: token._id});
-        break;
-      };
+    const decoded = jwt.verify(token, refreshSecret);
+    if (!decoded?.userId || !decoded.session) {
+      throw appError('Malformed token', StatusCodes.BAD_REQUEST);
     };
+    await refreshTknCollection.deleteOne(
+        {userId: decoded.userId, session: decoded.session});
   } catch (err) {
     throw err;
-  };
+  }
 };
