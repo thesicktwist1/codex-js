@@ -1,5 +1,5 @@
 {
-  "name": "codex",
+  "name": "codex-js",
   "version": "1.0.0",
   "description": "",
   "repository": {
@@ -10,18 +10,31 @@
   "author": "",
   "type": "module",
   "main": "server.js",
+  "engines": {
+    "node": ">=18.12.0"
+  },
   "scripts": {
     "start": "node --env-file=.env server",
-    "dev": "node --watch --env-file=.env server"
+    "dev": "node --watch --env-file=.env server",
+    "lint": "eslint .",
+    "test": "vitest"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",
     "cookie-parser": "^1.4.7",
     "express": "^5.2.1",
+    "express-mongo-sanitize": "^2.2.0",
+    "express-rate-limit": "^7.4.1",
+    "http-status-codes": "^2.3.0",
+    "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.3",
-    "mongodb": "^7.1.1"
+    "mongodb": "^7.1.1",
+    "vitest": "^4.1.2"
   },
   "devDependencies": {
-    "@types/node": "^25.5.0"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.1.0",
+    "mongodb-memory-server": "^11.0.1"
   }
 }

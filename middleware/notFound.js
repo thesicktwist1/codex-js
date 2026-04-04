@@ -1,7 +1,7 @@
-const notFoundHandler = (res, req, next) => {
-  const error = new Error('Not found');
-  error.status = 404;
-  next(err);
+import appError from '../utils/appError.js';
+
+const notFoundHandler = (req, res, next) => {
+  next(appError('Not found', 404));
 };
 
 export default notFoundHandler;

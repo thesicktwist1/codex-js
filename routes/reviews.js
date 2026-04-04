@@ -2,22 +2,26 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import mongoSanitize from 'express-mongo-sanitize'
 
-import * as authController from '../controllers/authController.js';
+import * as reviewsController from '../controllers/reviewsController.js';
 import authHandler from '../middleware/auth.js';
 
-
 const router = express.Router();
+
 // utils
 router.use(cookieParser());
 // security
 router.use(mongoSanitize());
 
-router.post('/login', authController.login);
+router.get('/:id', reviewsController.getReview);
 
-router.post('/register', authController.register);
+router.get('/', reviewsController.getReviews);
 
-router.post('/refresh', authController.refresh);
 
-router.post('/revoke', authHandler, authController.revoke);
+router.use(authHandler);
+
+router.put('/:id', reviewsController.updateReview);
+
+router.delete('/:id', reviewsController.deleteReview);
+
 
 export default router;
