@@ -30,6 +30,9 @@ jobs:
         cache: 'npm'
         cache-dependency-path: '**/package-lock.json'
 
+    - name: Clear npm cache to prevent stale package issues
+      run: npm cache clean --force
+
     - name: Install dependencies
       run: npm ci
 
