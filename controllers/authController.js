@@ -12,14 +12,22 @@ import validateSchema from '../utils/joiSchemas.js';
 import {deleteRefreshToken, generateRefreshToken} from '../utils/refreshToken.js'
 import userAuthentication from '../utils/userAuth.js';
 
+/**
+ * Authentication controller
+ *
+ * Centralizes login, registration, access-token refresh, and refresh-token
+ * revocation logic. Handlers validate input schemas and coordinate token
+ * lifecycle and user operations.
+ */
 const refreshSecret = process.env.REFRESH_SECRET;
 const secure = process.env.NODE_ENV === 'production';
 
 const usersCollection = database.collection('users');
 const refreshTknsCollection = database.collection('refreshToken');
 const saltRounds = 10;
-
-
+/**
+ * Revoke a refresh token stored in the client's cookie and clear the cookie.
+ */
 export const revoke = asyncHandler(async (req, res) => {
   const token = req.cookies?.refreshToken;
   if (token) {
@@ -27,8 +35,10 @@ export const revoke = asyncHandler(async (req, res) => {
   };
   res.status(StatusCodes.NO_CONTENT).clearCookie('refreshToken');
 });
-
-
+/**
+ * Exchange a valid refresh token (from cookie) for a new access token.
+ * Validates the JWT and ensures a matching hashed token exists in the DB.
+ */
 export const refresh = asyncHandler(async (req, res) => {
   const refreshToken = req.cookies?.refreshToken;
   if (!refreshToken) {
@@ -54,6 +64,10 @@ export const refresh = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json({accessToken: newAccessToken});
 });
 
+/**
+ * Authenticate a user and issue an access token plus an httpOnly refresh
+ * cookie.
+ */
 export const login = asyncHandler(async (req, res) => {
   const error = validateSchema('login', req.body);
   if (error) {
@@ -70,9 +84,10 @@ export const login = asyncHandler(async (req, res) => {
       .json({user: appUser(user), accessToken: newAccessToken});
 });
 
-// POST /auth/register creates a new user account with email, username, and
-// password. It validates input credentials, checks for existing users, and
-// stores the hashed password.
+/**
+ * Register a new user after validating input, enforcing uniqueness, and
+ * storing a bcrypt-hashed password.
+ */
 export const register = asyncHandler(async (req, res) => {
   const error = validateSchema('register', req.body);
   if (error) {

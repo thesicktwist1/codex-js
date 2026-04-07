@@ -7,6 +7,10 @@ import auth from './routes/auth.js';
 import books from './routes/books.js';
 import reviews from './routes/reviews.js';
 import user from './routes/user.js';
+// server.js — HTTP server entrypoint.
+// Configures parsing, rate limiting, routers, and error handling.
+// Fails fast if required environment variables are missing to avoid
+// running a misconfigured server.
 
 // Validate required environment variables
 const requiredEnvVars = ['ATLAS_URI', 'JWT_SECRET', 'REFRESH_SECRET'];
@@ -22,6 +26,8 @@ const port = process.env.PORT || 5050;
 
 const parserLimit = '1mb';
 
+// Limit JSON body size to reduce memory pressure and large payload abuse.
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 50,
@@ -33,8 +39,9 @@ const limiter = rateLimit({
 
 const app = express();
 
-// utils
+// Parse JSON bodies with configured size limit.
 app.use(express.json({limit: parserLimit}));
+// Apply IP rate limiting to reduce abusive traffic.
 app.use(limiter);
 
 // Routes
@@ -43,7 +50,7 @@ app.use('/api/books', books);
 app.use('/api/user', user);
 app.use('/api/reviews', reviews);
 
-// errors
+// Error handlers: 404 followed by the general error middleware.
 app.use(notFoundHandler);
 app.use(errorHandler);
 

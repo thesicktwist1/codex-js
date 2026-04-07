@@ -12,9 +12,18 @@ import userAuthentication from '../utils/userAuth.js';
 
 const saltRounds = 10;
 
+/**
+ * User controller
+ *
+ * Endpoints for retrieving and managing the authenticated user's profile.
+ * All handlers require authentication and validate inputs via Joi schemas.
+ */
+
 const usersCollection = database.collection('users');
-// GET /auth/user retrieves the authenticated user's profile information.
-// Requires : AccessToken
+/**
+ * GET /user
+ * Return the authenticated user's profile.
+ */
 export const getUser = asyncHandler(async (req, res) => {
   const id = new ObjectId(req.user.id);
   let user = await usersCollection.findOne({_id: id});
@@ -24,8 +33,10 @@ export const getUser = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json({user: appUser(user)});
 });
 
-// DELETE /auth/user deletes the authicated user's profile.
-// Requires : AccessToken & Password
+/**
+ * DELETE /user
+ * Delete the authenticated user's account after password verification.
+ */
 export const deleteUser = asyncHandler(async (req, res) => {
   const {password} = req.body;
   const user = await userAuthentication({id: req.user.id}, password);
@@ -34,9 +45,10 @@ export const deleteUser = asyncHandler(async (req, res) => {
   res.status(StatusCodes.NO_CONTENT).send();
 });
 
-// PUT /auth/user updates the authenticated
-// user's profile information (users password for now)
-// Requires : AccessToken & Password
+/**
+ * PUT /user
+ * Update the authenticated user's password after verifying the current one.
+ */
 export const updateUser = asyncHandler(async (req, res) => {
   const {currentPassword, newPassword} = req.body;
   const error = validateSchema('updateUser', req.body);

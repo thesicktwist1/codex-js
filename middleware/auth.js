@@ -3,6 +3,13 @@ import jwt from 'jsonwebtoken';
 
 import appError from '../utils/appError.js';
 
+/**
+ * Authentication middleware.
+ *
+ * Verifies the `Authorization: Bearer <token>` header, validates the JWT
+ * using `JWT_SECRET`, and attaches `req.user = {id}` on success. Errors are
+ * forwarded to the error handler using `appError`.
+ */
 const jwtSecret = process.env.JWT_SECRET;
 
 const authHandler = (req, res, next) => {

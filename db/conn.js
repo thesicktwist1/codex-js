@@ -1,5 +1,12 @@
 import {MongoClient} from 'mongodb';
 
+/**
+ * Database connection and initialization.
+ *
+ * Ensures `ATLAS_URI` is provided, connects to MongoDB, and creates the
+ * required unique indexes used by the application. Exports the connected
+ * `database` object for use throughout the app.
+ */
 const uri = process.env.ATLAS_URI || '';
 
 if (!uri) {

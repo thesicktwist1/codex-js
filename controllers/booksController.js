@@ -7,10 +7,18 @@ import appError from '../utils/appError.js';
 import databaseObject from '../utils/dbObject.js';
 import validateSchema from '../utils/joiSchemas.js';
 
+/**
+ * Books controller
+ *
+ * Handlers to list, retrieve, and create books. Enforces pagination and
+ * request validation to keep responses predictable and protect resources.
+ */
 const booksCollection = database.collection('books');
 const pageLimit = 10;
-// GET /api/books/:id
-// Retrieves a single book by ID.
+/**
+ * GET /api/books/:bookId
+ * Retrieve a single book by id. Validates the `bookId` parameter.
+ */
 export const getBook = asyncHandler(async (req, res) => {
   if (!ObjectId.isValid(req.params.bookId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
@@ -23,8 +31,10 @@ export const getBook = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(book);
 });
 
-// GET /api/books/
-// Retrieves books based on the given page & limit
+/**
+ * GET /api/books/
+ * List books with optional `limit` and `page` query parameters.
+ */
 export const getBooks = asyncHandler(async (req, res) => {
   let limit = parseInt(req.query.limit);
   if (isNaN(limit) || limit < 0 || limit > pageLimit) {
@@ -39,8 +49,10 @@ export const getBooks = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(books);
 });
 
-// POST /api/books/
-// Create a book
+/**
+ * POST /api/books/
+ * Create a new book after validating the request body.
+ */
 export const createBook = asyncHandler(async (req, res) => {
   const error = validateSchema('createBook', req.body);
   if (error) {
