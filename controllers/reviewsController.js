@@ -7,17 +7,31 @@ import appError from '../utils/appError.js';
 import databaseObject from '../utils/dbObject.js';
 import validateSchema from '../utils/joiSchemas.js';
 
+/**
+ * Reviews controller
+ *
+ * Handles creation, retrieval, updates, and deletion of reviews. Enforces
+ * rating bounds and provides pagination for listing endpoints to keep
+ * responses bounded.
+ */
+
 const reviewsCollection = database.collection('reviews');
 const booksCollection = database.collection('books');
 
 const pageLimit = 10;
 
+/**
+ * Validate that `rating` is a number between 1 and 10 (inclusive).
+ * @param {number} rating
+ * @returns {boolean}
+ */
 const isValidRating = (rating) => {
   return rating && typeof rating === 'number' && rating >= 1 && rating <= 10;
 };
-
-// POST /api/review
-// Creates a review based on the given book id
+/**
+ * POST /api/books/:bookId/reviews
+ * Create a review for an existing book. Requires authentication.
+ */
 export const createReview = asyncHandler(async (req, res) => {
   const error = validateSchema('createReview', req.body);
   if (error) {
@@ -42,8 +56,10 @@ export const createReview = asyncHandler(async (req, res) => {
       await reviewsCollection.findOne({_id: insertResult.insertedId});
   res.status(StatusCodes.CREATED).json(review);
 });
-// GET /api/review/:id
-// Get a single review based on id
+/**
+ * GET /api/reviews/:id
+ * Retrieve a single review by id.
+ */
 export const getReview = asyncHandler(async (req, res) => {
   if (!ObjectId.isValid(req.params.id)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
@@ -56,9 +72,10 @@ export const getReview = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(review);
 });
 
-// GET /api/books/:bookId/reviews
-// Get multiple reviews based on the given book id
-// Queries: [limit, page]
+/**
+ * GET /api/books/:bookId/reviews
+ * List reviews for a book with optional `limit` and `page` queries.
+ */
 export const getReviewsFromBookId = asyncHandler(async (req, res) => {
   if (!ObjectId.isValid(req.params.bookId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
@@ -80,9 +97,10 @@ export const getReviewsFromBookId = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(reviews);
 });
 
-// GET /api/user/:userId/reviews
-// Get multiple reviews based on the given book id
-// Queries: [limit, page]
+/**
+ * GET /api/user/:userId/reviews
+ * List reviews created by a specific user (supports pagination).
+ */
 export const getReviewsFromUserId = asyncHandler(async (req, res) => {
   if (!ObjectId.isValid(req.params.userId)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);
@@ -103,9 +121,10 @@ export const getReviewsFromUserId = asyncHandler(async (req, res) => {
                     .toArray();
   res.status(StatusCodes.OK).json(reviews);
 });
-// GET /api/reviews/
-// Get multiple reviews
-// Queries: [limit, page]
+/**
+ * GET /api/reviews/
+ * List reviews with optional pagination parameters.
+ */
 export const getReviews = asyncHandler(async (req, res) => {
   let limit = parseInt(req.query.limit);
   if (isNaN(limit) || limit < 0 || limit > pageLimit) {
@@ -121,9 +140,10 @@ export const getReviews = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(reviews);
 });
 
-// PUT /api/reviews/:id
-// Update a review based on given id
-// Require: Access Token
+/**
+ * PUT /api/reviews/:id
+ * Update a review. Requires authentication and enforces rating validation.
+ */
 export const updateReview = asyncHandler(async (req, res) => {
   const error = validateSchema('updateReview', req.body);
   if (error) {
@@ -147,9 +167,10 @@ export const updateReview = asyncHandler(async (req, res) => {
   res.status(StatusCodes.OK).json(result.value);
 });
 
-// DELETE /api/reviews/:id
-// Delete a review based on given id
-// Require: Access Token
+/**
+ * DELETE /api/reviews/:id
+ * Delete a review owned by the authenticated user.
+ */
 export const deleteReview = asyncHandler(async (req, res) => {
   if (!ObjectId.isValid(req.params.id) || !ObjectId.isValid(req.user.id)) {
     throw appError('Invalid parameter', StatusCodes.BAD_REQUEST);

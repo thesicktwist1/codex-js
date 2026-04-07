@@ -9,17 +9,16 @@ import appError from './appError.js';
 const usersCollection = database.collection('users');
 
 /**
- * Authenticates a user by email and password.
- * Verifies the user exists and password matches the hashed password stored in
- * the database.
+ * Authenticate a user by email or id and verify the plaintext password.
+ *
+ * Looks up the user and validates the bcrypt-hashed password. Throws an
+ * `appError` when the user is not found or credentials are invalid.
  *
  * @async
- * @param {string} param - The user's email address or id
- * @param {string} password - The user's plaintext password
- * @returns {Promise<Object>} The user object with _id, email, username, and
- *     timestamp fields
- * @throws {Error} appError with UNAUTHORIZED status if user not found or
- *     password doesn't match
+ * @param {Object} param - Object containing `email` or `id` to locate user
+ * @param {string} password - Plaintext password to verify
+ * @returns {Promise<Object>} The user document on success
+ * @throws {Error} appError when authentication fails
  */
 const userAuthentication = async (param, password) => {
   const {email, id} = param;

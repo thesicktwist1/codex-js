@@ -1,3 +1,10 @@
+/**
+ * Refresh token utilities
+ *
+ * Helpers to generate and revoke refresh tokens. Refresh tokens are stored
+ * in the database as hashed values with a per-session UUID to support
+ * revocation and token rotation.
+ */
 import bcrypt from 'bcrypt';
 import crypto from 'crypto'
 import {StatusCodes} from 'http-status-codes';
@@ -15,6 +22,12 @@ const saltRounds = 10;
 
 const refreshTknCollection = database.collection('refreshToken');
 
+/**
+ * Generate a refresh token for a user and persist a hashed copy.
+ *
+ * @param {string} userId - The user's MongoDB id
+ * @returns {Promise<string>} The raw JWT refresh token
+ */
 export const generateRefreshToken = async (userId) => {
   const session = crypto.randomUUID();
   const token = jwt.sign(
@@ -32,6 +45,12 @@ export const generateRefreshToken = async (userId) => {
   return token;
 };
 
+/**
+ * Verify and delete a stored refresh token matching the raw JWT.
+ *
+ * @param {string} token - Raw JWT refresh token
+ * @returns {Promise<void>}
+ */
 export const deleteRefreshToken = async (token) => {
   const decoded = jwt.verify(token, refreshSecret);
   if (!decoded?.userId || !decoded.session) {

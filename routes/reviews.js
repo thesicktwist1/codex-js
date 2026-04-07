@@ -5,12 +5,16 @@ import mongoSanitize from 'express-mongo-sanitize'
 import * as reviewsController from '../controllers/reviewsController.js';
 import authHandler from '../middleware/auth.js';
 
+// Review routes under /api/reviews.
+// Read endpoints are public; write operations require authentication.
+// All requests are sanitized.
 const router = express.Router();
 
-// utils
+// Parse cookies where needed.
 router.use(cookieParser());
-// security
+// Sanitize request payloads to prevent MongoDB operator injection.
 router.use(mongoSanitize());
+
 
 router.get('/:id', reviewsController.getReview);
 
